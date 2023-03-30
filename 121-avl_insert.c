@@ -108,3 +108,110 @@ avl_t *avl_insert(avl_t **tree, int value)
 	avl_insert_recursive(tree, *tree, &new, value);
 	return (new);
 }
+
+/**
+ * binary_tree_height - measures the height of a binary tree.
+ *@tree: pointer to the root node of the tree to measure the height.
+ * Return: if tree is NULL, your function must return 0.
+ */
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+	if (tree)
+	{
+		int left = 1, right = 1;
+
+		if (tree->right)
+			right +=  binary_tree_height(tree->right);
+		if (tree->left)
+			left +=  binary_tree_height(tree->left);
+		if (left > right)
+			return (left);
+		else
+			return (right);
+	}
+	else
+		return (0);
+}
+/**
+ * binary_tree_balance - measures the balance factor of a binary tree.
+ *@tree: pointer to the root node of the tree to measure the balance factor.
+ * Return: If tree is NULL, return 0
+ */
+int binary_tree_balance(const binary_tree_t *tree)
+{
+	if (tree == NULL)
+		return (0);
+	return (binary_tree_height(tree->left)
+		- binary_tree_height(tree->right));
+}
+
+/**
+ * binary_tree_rotate_left -  performs a left-rotation on a binary tree
+ * @tree: pointer to binare_tree_t
+ * Return: pointer to the new root node of the tree once rotated;
+ */
+binary_tree_t *binary_tree_rotate_left(binary_tree_t *tree)
+{
+	binary_tree_t *aux, *temp;
+
+	if (tree == NULL)
+		return (NULL);
+	if (tree->right)
+	{
+		temp = tree->right->left;
+		aux = tree->right;
+		aux->parent = tree->parent;
+		aux->left = tree;
+		tree->parent = aux;
+		tree->right = temp;
+		if (temp)
+			temp->parent = tree;
+		return (aux);
+	}
+	return (NULL);
+}
+
+/**
+ * binary_tree_rotate_right -  performs a rigth-rotation on a binary tree
+ * @tree: pointer to binare_tree_t
+ * Return: pointer to the new root node of the tree once rotated;
+ */
+binary_tree_t *binary_tree_rotate_right(binary_tree_t *tree)
+{
+	binary_tree_t *aux, *temp;
+
+	if (tree == NULL)
+		return (NULL);
+	if (tree->left)
+	{
+		temp = tree->left->right;
+		aux = tree->left;
+		aux->parent = tree->parent;
+		aux->right = tree;
+		tree->parent = aux;
+		tree->left = temp;
+		if (temp)
+			temp->parent = tree;
+		return (aux);
+	}
+	return (NULL);
+}
+
+/**
+ * binary_tree_node - function that creates a binary tree node.
+ *@parent: is a pointer to the parent node of the node to create.
+ *@value: is the value to put in the new node.
+ * Return:Your function must return a pointer to the new node or NULL if no.
+ */
+binary_tree_t *binary_tree_node(binary_tree_t *parent, int value)
+{
+	binary_tree_t *node = malloc(sizeof(binary_tree_t));
+
+	if (node == NULL)
+		return (NULL);
+	node->n = value;
+	node->parent = parent;
+	node->left = NULL;
+	node->right = NULL;
+	return (node);
+}
